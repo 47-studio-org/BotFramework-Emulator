@@ -37,6 +37,7 @@ const Adapter = require('enzyme-adapter-react-16');
 Enzyme.configure({ adapter: new Adapter() });
 window.require = function() {
   return {
+    ...require('./jestMocks/electronRemoteMock'),
     ipcRenderer: {
       on() {
         return null;
@@ -69,12 +70,14 @@ window.TextDecoder = class {
   }
 };
 
-window.crypto = {
-  random: () => Math.random() * 1000,
-  subtle: {
-    digest: async () => Promise.resolve('Hi! I am in your digest'),
-  },
-};
+Object.defineProperty(window, 'crypto', {
+  get: () => ({
+    random: () => Math.random() * 1000,
+    subtle: {
+      digest: async () => Promise.resolve('Hi! I am in your digest'),
+    },
+  }),
+});
 
 window.MutationObserver = class {
   observe() {}

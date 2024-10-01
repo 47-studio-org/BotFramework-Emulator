@@ -1,13 +1,13 @@
 {
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist --ignore @bfemulator/tools",
-    "bootstrap:dev": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap --hoist --ignore @bfemulator/tools -- --lockfile-version=1",
+    "bootstrap:dev": "lerna bootstrap --hoist -- --lockfile-version=1",
     "build": "npm rebuild node-sass && npm run rebuild:keytar:electron && lerna run build",
     "lint": "lerna run lint --no-bail",
     "lint:fix": "lerna run lint:fix --no-bail",
     "rebuild:keytar:electron": "rimraf node_modules/keytar/build && electron-rebuild",
     "rebuild:keytar:node": "npm rebuild keytar",
-    "start": "cd packages\\app\\client && npm run start",
+    "start": "cd packages/app/client && npm run start",
     "start:test-bot": "lerna run --scope @bfemulator/tools start:test-bot --stream",
     "test": "npm run rebuild:keytar:node && jest --no-cache --runInBand --testPathIgnorePatterns=/packages/app/main/e2e/",
     "test:coveralls": "jest --runInBand --coverage --coverageReporters=text-lcov | coveralls",
@@ -16,19 +16,24 @@
     "uploadcoverage": "cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.0",
-    "@babel/core": "^7.1.0",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-proposal-decorators": "^7.4.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/plugin-transform-react-jsx": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-typescript": "^7.1.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "24.8.0",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.20.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/plugin-transform-react-jsx": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
+    "babel-jest": "^29.3.1",
     "husky": "^1.3.1",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
     "lint-staged": "^12.3.7",
     "prettier": "^1.15.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -49,7 +54,11 @@
     "globals": {
       "__JEST_ENV__": true
     },
-    "testURL": "http://localhost",
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "customExportConditions": ["node"],
+      "url": "http://localhost"
+    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -59,15 +68,12 @@
       "node"
     ],
     "moduleNameMapper": {
+      "@electron/remote/main": "<rootDir>/jestMocks/electronRemoteMock.js",
+      "@electron/remote": "<rootDir>/jestMocks/electronRemoteMock.js",
       "monaco-editor": "<rootDir>/jestMocks/monacoEditorMock.js",
       ".\\.css$": "<rootDir>/jestMocks/styleMock.js",
       ".\\.scss$": "<rootDir>/jestMocks/styleMock.js",
       ".\\.svg$": "<rootDir>/jestMocks/svgMock.js"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
@@ -76,7 +82,28 @@
     ]
   },
   "dependencies": {
-    "lerna": "^3.14.1",
-    "keytar": "7.3.0"
+    "keytar": "7.9.0"
+  },
+  "overrides": {
+    "minimist": ">=1.2.8",
+    "follow-redirects": ">=1.15.9",
+    "serialize-javascript@<6.0.2": ">=6.0.2",
+    "postcss@<7.0.36": ">=8.4.45",
+    "trim-newlines@<3.0.1": ">=3.0.1",
+    "parse-path@<5.0.0": ">=7.0.0",
+    "glob-parent@<5.1.2": ">=6.0.2",
+    "browserslist@>=4.0.0 <4.16.5": ">=4.23.3",
+    "ejs@<3.1.7": ">=3.1.10",
+    "jsdom@<=16.4.0": ">=25.0.0",
+    "axios@<0.21.2": ">=1.7.7",
+    "parse-url@<8.1.0": ">=9.2.2",
+    "minimatch@<3.0.5": ">=10.0.1",
+    "shell-quote@<=1.7.2": ">=1.8.1",
+    "got@<11.8.5": ">=14.4.2",
+    "ajv@<6.12.3": ">=6.12.3",
+    "braces@<3.0.2" : ">=3.0.3",
+    "ip@<2.0.0" : ">=2.0.1",
+    "path-to-regexp@<1.0.0" : ">=1.9.0",
+    "body-parser@<1.20.1" : ">=1.20.3"
   }
 }

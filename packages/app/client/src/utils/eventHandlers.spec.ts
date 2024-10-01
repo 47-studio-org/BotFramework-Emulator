@@ -33,6 +33,7 @@
 
 import { SharedConstants } from '@bfemulator/app-shared';
 import { CommandServiceImpl, CommandServiceInstance } from '@bfemulator/sdk-shared';
+import * as remote from '@electron/remote';
 
 import { globalHandlers } from './eventHandlers';
 
@@ -51,6 +52,7 @@ const mockCurrentWebContents = {
   getZoomFactor: jest.fn(),
   setZoomFactor: jest.fn(),
 };
+(remote.getCurrentWebContents as any).mockReturnValue(mockCurrentWebContents);
 jest.mock('electron', () => ({
   ipcMain: new Proxy(
     {},
@@ -74,9 +76,6 @@ jest.mock('electron', () => ({
       },
     }
   ),
-  remote: {
-    getCurrentWebContents: () => mockCurrentWebContents,
-  },
 }));
 
 const mockDOM = `
@@ -259,7 +258,7 @@ describe('#globalHandlers', () => {
     expect(mockLocalCommandsCalled[0].commandName).toBe(ToggleFullScreen);
   });
 
-  it('should toggle dev tools when Ctrl+Shit+I is pressed', async () => {
+  it('should toggle dev tools when Ctrl+Shift+I is pressed', async () => {
     const event = new KeyboardEvent('keydown', { ctrlKey: true, shiftKey: true, key: 'i' });
     await globalHandlers(event);
 

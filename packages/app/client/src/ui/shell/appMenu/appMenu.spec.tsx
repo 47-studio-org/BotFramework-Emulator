@@ -224,7 +224,7 @@ describe('<AppMenu />', () => {
     expect(updateItem.disabled).toBe(false);
 
     updateItem.onClick();
-    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, CheckForUpdates, null));
+    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, CheckForUpdates, expect.any(Function)));
   });
 
   it('should get an app update menu item for when the updater is idle', () => {
@@ -235,7 +235,7 @@ describe('<AppMenu />', () => {
     expect(updateItem.disabled).toBe(false);
 
     updateItem.onClick();
-    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, CheckForUpdates, null));
+    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, CheckForUpdates, expect.any(Function)));
   });
 
   it('should get a sign in menu item for a signed out user', async () => {
@@ -246,7 +246,7 @@ describe('<AppMenu />', () => {
 
     await signInItem.onClick();
 
-    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(false, SignInToAzure, jasmine.any(Function)));
+    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(false, SignInToAzure, expect.any(Function)));
   });
 
   it('should get a sign out menu item for a signed in user', async () => {
@@ -257,7 +257,7 @@ describe('<AppMenu />', () => {
 
     await signInItem.onClick();
 
-    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, SignUserOutOfAzure, jasmine.any(Function)));
-    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(false, InvalidateAzureArmToken, jasmine.any(Function)));
+    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(true, SignUserOutOfAzure, expect.any(Function)));
+    expect(dispatchSpy).toHaveBeenCalledWith(executeCommand(false, InvalidateAzureArmToken, expect.any(Function)));
   });
 });

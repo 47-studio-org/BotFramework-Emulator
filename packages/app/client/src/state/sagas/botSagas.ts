@@ -110,6 +110,7 @@ export class BotSagas {
       mode: action.payload.mode,
       msaAppId: action.payload.appId,
       msaPassword: action.payload.appPassword,
+      msaTenantId: action.payload.tenantId,
     };
     let res: Response = yield call([ConversationService, ConversationService.startConversation], serverUrl, payload);
     if (!res.ok) {
@@ -135,6 +136,7 @@ export class BotSagas {
       speechKey: action.payload.speechKey,
       speechRegion: action.payload.speechRegion,
       user,
+      msaTenantId: action.payload.tenantId,
     });
 
     // add a document to the store so the livechat tab is rendered
@@ -147,7 +149,6 @@ export class BotSagas {
       })
     );
 
-    // call emulator to report proper status to chat panel (listening / ngrok)
     res = yield ConversationService.sendInitialLogReport(serverUrl, conversationId, action.payload.endpoint);
     if (!res.ok) {
       yield* throwErrorFromResponse('Error occurred while sending the initial log report', res);

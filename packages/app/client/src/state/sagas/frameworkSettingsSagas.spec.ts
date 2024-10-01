@@ -120,14 +120,12 @@ describe('The frameworkSettingsSagas', () => {
       useCustomId: false,
       usePrereleases: false,
       userGUID: '',
-      ngrokPath: 'some/path/to/ngrok',
     };
     const updatedSettings: Partial<FrameworkSettings> = {
       autoUpdate: true,
       useCustomId: true,
       usePrereleases: false,
       userGUID: 'some-user-id',
-      ngrokPath: 'some/different/path/to/ngrok',
     };
     const gen = FrameworkSettingsSagas.saveFrameworkSettings(saveFrameworkSettingsAction(updatedSettings));
     // selector to get the active document from the state
@@ -147,7 +145,6 @@ describe('The frameworkSettingsSagas', () => {
           autoUpdate: true,
           useCustomId: true,
           userGUID: 'some-user-id',
-          ngrokPath: 'some/different/path/to/ngrok',
         }
       )
     );
@@ -159,8 +156,8 @@ describe('The frameworkSettingsSagas', () => {
     gen.next();
     const errMsg = `Error while saving emulator settings: oh noes!`;
     const notification = newNotification(errMsg);
-    notification.timestamp = jasmine.any(Number) as any;
-    notification.id = jasmine.any(String) as any;
+    notification.timestamp = expect.any(Number) as any;
+    notification.id = expect.any(String) as any;
     expect(gen.throw('oh noes!').value).toEqual(put(beginAdd(notification)));
   });
 });

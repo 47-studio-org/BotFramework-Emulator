@@ -54,10 +54,8 @@ describe('tokenResponseHandler', () => {
       end: jest.fn(),
       send: jest.fn(),
     };
-    const next = jest.fn();
     const mockSendTokenResponse = jest.fn().mockResolvedValue({ statusCode: HttpStatus.OK });
     const emulatorServer: any = {
-      shutDownOAuthNgrokInstance: jest.fn(),
       state: {
         conversations: {
           conversationById: jest.fn(() => ({
@@ -67,12 +65,10 @@ describe('tokenResponseHandler', () => {
       },
     };
     const tokenResponse = createTokenResponseHandler(emulatorServer);
-    await tokenResponse(req, res, next);
+    await tokenResponse(req, res);
 
     expect(mockSendTokenResponse).toHaveBeenCalledWith(req.body.connectionName, req.body.token, false);
     expect(res.send).toHaveBeenCalledWith(HttpStatus.OK, req.body);
-    expect(emulatorServer.shutDownOAuthNgrokInstance).toHaveBeenCalled();
-    expect(next).toHaveBeenCalled();
   });
 
   it('should return the status code of sending the token response if it is not 200', async () => {
@@ -84,10 +80,8 @@ describe('tokenResponseHandler', () => {
       end: jest.fn(),
       send: jest.fn(),
     };
-    const next = jest.fn();
     const mockSendTokenResponse = jest.fn().mockResolvedValue({ statusCode: HttpStatus.BAD_REQUEST });
     const emulatorServer: any = {
-      shutDownOAuthNgrokInstance: jest.fn(),
       state: {
         conversations: {
           conversationById: jest.fn(() => ({
@@ -97,12 +91,10 @@ describe('tokenResponseHandler', () => {
       },
     };
     const tokenResponse = createTokenResponseHandler(emulatorServer);
-    await tokenResponse(req, res, next);
+    await tokenResponse(req, res);
 
     expect(mockSendTokenResponse).toHaveBeenCalledWith(req.body.connectionName, req.body.token, false);
     expect(res.send).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
-    expect(emulatorServer.shutDownOAuthNgrokInstance).toHaveBeenCalled();
-    expect(next).toHaveBeenCalled();
   });
 
   it('should send an error response if something goes wrong', async () => {
@@ -114,9 +106,7 @@ describe('tokenResponseHandler', () => {
       end: jest.fn(),
       send: jest.fn(),
     };
-    const next = jest.fn();
     const emulatorServer: any = {
-      shutDownOAuthNgrokInstance: jest.fn(),
       state: {
         conversations: {
           conversationById: jest.fn(() => ({
@@ -126,10 +116,8 @@ describe('tokenResponseHandler', () => {
       },
     };
     const tokenResponse = createTokenResponseHandler(emulatorServer);
-    await tokenResponse(req, res, next);
+    await tokenResponse(req, res);
 
-    expect(mockSendErrorResponse).toHaveBeenCalledWith(req, res, next, new Error('Could not send token response.'));
-    expect(next).toHaveBeenCalled();
-    expect(emulatorServer.shutDownOAuthNgrokInstance).toHaveBeenCalled();
+    expect(mockSendErrorResponse).toHaveBeenCalledWith(req, res, null, new Error('Could not send token response.'));
   });
 });

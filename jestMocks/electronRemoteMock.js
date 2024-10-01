@@ -31,19 +31,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { connect } from 'react-redux';
-
-import { RootState } from '../../../../state/index';
-
-import { NgrokTab, NgrokTabProps } from './ngrokTab';
-
-const mapStateToProps = (state: RootState, ownProps: Record<string, unknown>): Partial<NgrokTabProps> => {
-  const { tunnelStatus } = state.ngrokTunnel;
-
-  return {
-    tunnelStatus,
-    ...ownProps,
-  };
+let isFullScreen = false;
+module.exports = {
+  getGlobal: jest.fn(),
+  enable: jest.fn(),
+  getCurrentWebContents: jest.fn(),
+  getCurrentWindow: jest.fn().mockReturnValue({
+    setFullScreen: jest.fn().mockImplementation(v => (isFullScreen = v)),
+    isFullScreen: jest.fn().mockImplementation(() => isFullScreen),
+  }),
+  app: {
+    getVersion: jest.fn().mockReturnValue('4.x.mock-version'),
+    getName: jest.fn().mockReturnValue('Emulator mock app name'),
+    isPackaged: true,
+  },
 };
-
-export const NgrokTabContainer = connect(mapStateToProps, null)(NgrokTab);

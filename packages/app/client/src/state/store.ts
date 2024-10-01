@@ -32,7 +32,8 @@
 //
 
 import { applyMiddleware, createStore, combineReducers, compose, Store } from 'redux';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
+import * as remote from '@electron/remote';
 import sagaMiddlewareFactory from 'redux-saga';
 import { call, all, spawn } from 'redux-saga/effects';
 import {
@@ -72,8 +73,6 @@ import {
   Settings,
   ThemeState,
   UpdateState,
-  ngrokTunnel,
-  NgrokTunnelState,
 } from '@bfemulator/app-shared';
 
 import { forwardToMain } from './middleware/forwardToMain';
@@ -97,7 +96,6 @@ export interface RootState {
   settings?: Settings;
   theme?: ThemeState;
   update?: UpdateState;
-  ngrokTunnel?: NgrokTunnelState;
 }
 
 const DEFAULT_STATE = {};
@@ -136,7 +134,6 @@ function initStore(): Store<RootState> {
       settings: settingsReducer,
       theme,
       update,
-      ngrokTunnel,
     }),
     DEFAULT_STATE,
     storeEnhancer

@@ -48,15 +48,18 @@ module.exports = {
         use: [
           'style-loader',
           {
-            loader: 'typings-for-css-modules-loader',
+            loader: '@teamsupercell/typings-for-css-modules-loader',
             options: {
-              localIdentName: '[local]__[hash:base64:5]',
+              banner: '// This is a generated file. Changes are likely to result in being overwritten',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
               modules: true,
-              sass: false,
               namedExport: true,
               camelCase: true,
               sourcemaps: true,
-              banner: '// This is a generated file. Changes are likely to result in being overwritten',
             },
           },
           'resolve-url-loader',
@@ -81,8 +84,8 @@ module.exports = {
   },
 
   devServer: {
+    static: path.resolve(__dirname, 'public'),
     hot: true,
-    inline: true,
     port: 8080,
     historyApiFallback: false,
   },
@@ -104,20 +107,22 @@ module.exports = {
   externals: {},
   plugins: [
     new WatchIgnorePlugin(['./build/**/*.*', './public/**/*.*', './src/**/*.d.ts']),
-    new CopyWebpackPlugin([
-      {
-        from: './src/styles/themes/light-luis.css',
-        to: './themes/light-luis.css',
-      },
-      {
-        from: './src/styles/themes/dark-luis.css',
-        to: './themes/dark-luis.css',
-      },
-      {
-        from: './src/styles/themes/high-contrast-luis.css',
-        to: './themes/high-contrast-luis.css',
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: './src/styles/themes/light-luis.css',
+          to: './themes/light-luis.css',
+        },
+        {
+          from: './src/styles/themes/dark-luis.css',
+          to: './themes/dark-luis.css',
+        },
+        {
+          from: './src/styles/themes/high-contrast-luis.css',
+          to: './themes/high-contrast-luis.css',
+        },
+      ],
+    }),
     new DefinePlugin({
       process: { env: {} },
     }),

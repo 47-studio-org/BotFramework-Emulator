@@ -59,13 +59,12 @@ describe('startConversation handler', () => {
       end: jest.fn(),
       json: jest.fn(),
     };
-    const next = jest.fn();
     const startConversation = createStartConversationHandler(emulatorServer);
-    await startConversation(req, res, next);
+    await startConversation(req, res);
 
     expect(mockCreatedConversation.sendConversationUpdate).toHaveBeenCalledWith(
       [
-        { id: jasmine.any(String), name: 'User' },
+        { id: expect.any(String), name: 'User' },
         { id: req.botEndpoint.botId, name: 'Bot' },
       ],
       undefined
@@ -73,11 +72,10 @@ describe('startConversation handler', () => {
     expect(res.json).toHaveBeenCalledWith(HttpStatus.CREATED, {
       conversationId: mockCreatedConversation.conversationId,
       token: req.botEndpoint.id,
-      expires_in: jasmine.any(Number),
+      expires_in: expect.any(Number),
       streamUrl: '',
     });
     expect(res.end).toHaveBeenCalled();
-    expect(next).toHaveBeenCalled();
   });
 
   it('should send a 200 with info about the conversation if it already exists, and should add members to the conversation', async () => {
@@ -107,19 +105,17 @@ describe('startConversation handler', () => {
       end: jest.fn(),
       json: jest.fn(),
     };
-    const next = jest.fn();
     const startConversation = createStartConversationHandler(emulatorServer);
-    await startConversation(req, res, next);
+    await startConversation(req, res);
 
     expect(mockCreatedConversation.addMember).toHaveBeenCalledTimes(2); // once for user, and once for bot
     expect(res.json).toHaveBeenCalledWith(HttpStatus.OK, {
       conversationId: mockCreatedConversation.conversationId,
       token: req.botEndpoint.id,
-      expires_in: jasmine.any(Number),
+      expires_in: expect.any(Number),
       streamUrl: '',
     });
     expect(res.end).toHaveBeenCalled();
-    expect(next).toHaveBeenCalled();
   });
 
   it('should send a 200 with info about the conversation if it already exists, and should send the conversation updates', async () => {
@@ -149,9 +145,8 @@ describe('startConversation handler', () => {
       end: jest.fn(),
       json: jest.fn(),
     };
-    const next = jest.fn();
     const startConversation = createStartConversationHandler(emulatorServer);
-    await startConversation(req, res, next);
+    await startConversation(req, res);
 
     expect(mockCreatedConversation.addMember).not.toHaveBeenCalled();
     expect(mockCreatedConversation.sendConversationUpdate).toHaveBeenCalledWith(
@@ -161,10 +156,9 @@ describe('startConversation handler', () => {
     expect(res.json).toHaveBeenCalledWith(HttpStatus.OK, {
       conversationId: mockCreatedConversation.conversationId,
       token: req.botEndpoint.id,
-      expires_in: jasmine.any(Number),
+      expires_in: expect.any(Number),
       streamUrl: '',
     });
     expect(res.end).toHaveBeenCalled();
-    expect(next).toHaveBeenCalled();
   });
 });
